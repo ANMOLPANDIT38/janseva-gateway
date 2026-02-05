@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Language = 'en' | 'hi' | 'mr' | 'ta' | 'te' | 'bn';
+type Theme = 'light' | 'dark' | 'system';
 
 interface User {
   id: string;
@@ -18,6 +19,9 @@ interface AppContextType {
   setIsOnline: (status: boolean) => void;
   showChatbot: boolean;
   setShowChatbot: (show: boolean) => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  isDarkMode: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -68,6 +72,10 @@ export const translations: Record<Language, Record<string, string>> = {
     offline: 'You are offline',
     sessionTimeout: 'Session will expire in',
     continueSession: 'Continue Session',
+    darkMode: 'Dark Mode',
+    lightMode: 'Light Mode',
+    systemTheme: 'System',
+    appearance: 'Appearance',
   },
   hi: {
     welcome: 'स्वागत है',
@@ -114,6 +122,10 @@ export const translations: Record<Language, Record<string, string>> = {
     offline: 'आप ऑफ़लाइन हैं',
     sessionTimeout: 'सत्र समाप्त होगा',
     continueSession: 'सत्र जारी रखें',
+    darkMode: 'डार्क मोड',
+    lightMode: 'लाइट मोड',
+    systemTheme: 'सिस्टम',
+    appearance: 'दिखावट',
   },
   mr: {
     welcome: 'स्वागत आहे',
@@ -160,6 +172,10 @@ export const translations: Record<Language, Record<string, string>> = {
     offline: 'तुम्ही ऑफलाइन आहात',
     sessionTimeout: 'सत्र संपेल',
     continueSession: 'सत्र चालू ठेवा',
+    darkMode: 'डार्क मोड',
+    lightMode: 'लाइट मोड',
+    systemTheme: 'सिस्टम',
+    appearance: 'दिसणे',
   },
   ta: {
     welcome: 'வரவேற்கிறோம்',
@@ -206,6 +222,10 @@ export const translations: Record<Language, Record<string, string>> = {
     offline: 'நீங்கள் ஆஃப்லைனில்',
     sessionTimeout: 'அமர்வு முடியும்',
     continueSession: 'அமர்வை தொடர',
+    darkMode: 'டார்க் மோட்',
+    lightMode: 'லைட் மோட்',
+    systemTheme: 'சிஸ்டம்',
+    appearance: 'தோற்றம்',
   },
   te: {
     welcome: 'స్వాగతం',
@@ -252,6 +272,10 @@ export const translations: Record<Language, Record<string, string>> = {
     offline: 'మీరు ఆఫ్‌లైన్‌లో ఉన్నారు',
     sessionTimeout: 'సెషన్ ముగుస్తుంది',
     continueSession: 'సెషన్ కొనసాగించు',
+    darkMode: 'డార్క్ మోడ్',
+    lightMode: 'లైట్ మోడ్',
+    systemTheme: 'సిస్టమ్',
+    appearance: 'రూపం',
   },
   bn: {
     welcome: 'স্বাগতম',
@@ -298,6 +322,10 @@ export const translations: Record<Language, Record<string, string>> = {
     offline: 'আপনি অফলাইনে আছেন',
     sessionTimeout: 'সেশন শেষ হবে',
     continueSession: 'সেশন চালিয়ে যান',
+    darkMode: 'ডার্ক মোড',
+    lightMode: 'লাইট মোড',
+    systemTheme: 'সিস্টেম',
+    appearance: 'চেহারা',
   },
 };
 
@@ -306,6 +334,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isOnline, setIsOnline] = useState(true);
   const [showChatbot, setShowChatbot] = useState(false);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('theme') as Theme) || 'system';
+    }
+    return 'system';
+  });
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    
+    const applyTheme = () => {
+      if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        root.classList.add('dark');
+        setIsDarkMode(true);
+      } else {
+        root.classList.remove('dark');
+        setIsDarkMode(false);
+      }
+    };
+
+    applyTheme();
+    localStorage.setItem('theme', theme);
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => {
+      if (theme === 'system') {
+        applyTheme();
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
 
   return (
     <AppContext.Provider
@@ -318,6 +379,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setIsOnline,
         showChatbot,
         setShowChatbot,
+        theme,
+        setTheme,
+        isDarkMode,
       }}
     >
       {children}
