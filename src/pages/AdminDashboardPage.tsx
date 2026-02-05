@@ -25,6 +25,10 @@ import {
   X,
 } from 'lucide-react';
 import { useApp, useTranslation } from '@/contexts/AppContext';
+import DepartmentComplaintsChart from '@/components/charts/DepartmentComplaintsChart';
+import TransactionTrendsChart from '@/components/charts/TransactionTrendsChart';
+import UsageDonutChart from '@/components/charts/UsageDonutChart';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const statsCards = [
   {
@@ -393,28 +397,63 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Charts Placeholder */}
+          {/* Real Charts */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           >
             <div className="bg-card rounded-xl shadow-md p-6">
               <h2 className="font-semibold text-lg mb-4">Department-wise Complaints</h2>
-              <div className="h-64 flex items-center justify-center border-2 border-dashed rounded-lg">
-                <div className="text-center text-muted-foreground">
-                  <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p>Bar Chart Placeholder</p>
-                </div>
-              </div>
+              <DepartmentComplaintsChart />
             </div>
             <div className="bg-card rounded-xl shadow-md p-6">
               <h2 className="font-semibold text-lg mb-4">Transaction Trends</h2>
-              <div className="h-64 flex items-center justify-center border-2 border-dashed rounded-lg">
-                <div className="text-center text-muted-foreground">
-                  <TrendingUp className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p>Line Chart Placeholder</p>
+              <TransactionTrendsChart />
+            </div>
+          </motion.div>
+
+          {/* Service Usage Distribution */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+          >
+            <div className="bg-card rounded-xl shadow-md p-6">
+              <h2 className="font-semibold text-lg mb-4">Service Usage Distribution</h2>
+              <UsageDonutChart />
+            </div>
+            <div className="lg:col-span-2 bg-card rounded-xl shadow-md p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-semibold text-lg">Quick Settings</h2>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-foreground">Appearance</p>
+                    <p className="text-sm text-muted-foreground">Switch between light and dark mode</p>
+                  </div>
+                  <ThemeToggle />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-foreground">Auto-refresh Data</p>
+                    <p className="text-sm text-muted-foreground">Refresh dashboard every 5 minutes</p>
+                  </div>
+                  <button className="w-12 h-7 rounded-full bg-accent transition-colors relative">
+                    <span className="absolute top-1 right-1 w-5 h-5 bg-white rounded-full shadow" />
+                  </button>
+                </div>
+                <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-foreground">Sound Alerts</p>
+                    <p className="text-sm text-muted-foreground">Play sound on new complaints</p>
+                  </div>
+                  <button className="w-12 h-7 rounded-full bg-muted transition-colors relative">
+                    <span className="absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow" />
+                  </button>
                 </div>
               </div>
             </div>

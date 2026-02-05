@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Globe, User, LogOut, Menu, Bell } from 'lucide-react';
+import { Globe, User, LogOut, Menu, Bell, Moon, Sun } from 'lucide-react';
 import { useApp, useTranslation, translations } from '@/contexts/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -20,7 +20,7 @@ const languages = [
 ];
 
 export default function GovHeader() {
-  const { language, setLanguage, user, setUser } = useApp();
+  const { language, setLanguage, user, setUser, theme, setTheme, isDarkMode } = useApp();
   const t = useTranslation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -109,6 +109,15 @@ export default function GovHeader() {
 
               {user && (
                 <>
+                  {/* Theme Toggle */}
+                  <button
+                    onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}
+                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                    title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                  >
+                    {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                  </button>
+
                   {/* Notifications */}
                   <button className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors relative">
                     <Bell className="w-5 h-5" />

@@ -9,7 +9,8 @@ import {
   Lock,
   Globe,
   Bell,
-  Moon,
+  Moon, 
+  Sun,
   Smartphone,
   HelpCircle,
   FileText,
@@ -23,6 +24,7 @@ import {
 import { useApp, useTranslation } from '@/contexts/AppContext';
 import GovHeader from '@/components/layout/GovHeader';
 import AIChatbot from '@/components/chat/AIChatbot';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const languages = [
   { code: 'en', name: 'English', native: 'English' },
@@ -98,6 +100,12 @@ export default function SettingsPage() {
       icon: QrCode,
       title: 'QR Session Transfer',
       description: 'Continue session on another device',
+    },
+    {
+      id: 'appearance',
+      icon: Moon,
+      title: 'Appearance',
+      description: 'Light, dark, or system theme',
     },
   ];
 
@@ -365,6 +373,43 @@ export default function SettingsPage() {
               <p className="text-sm text-muted-foreground">
                 QR Code expires in <span className="font-mono text-foreground">04:59</span>
               </p>
+            </div>
+          )}
+
+          {/* Appearance Section */}
+          {activeSection === 'appearance' && (
+            <div className="bg-card rounded-xl shadow-md p-6 space-y-6">
+              <div>
+                <h3 className="font-semibold text-foreground mb-2">Theme</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Choose how the application looks. Select system to match your device settings.
+                </p>
+                <ThemeToggle />
+              </div>
+              
+              <div className="border-t pt-6">
+                <h3 className="font-semibold text-foreground mb-2">Preview</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-lg bg-background border">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sun className="w-5 h-5 text-secondary" />
+                      <span className="font-medium">Light Mode</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Best for daytime use and well-lit environments
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-sidebar text-sidebar-foreground border border-sidebar-border">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Moon className="w-5 h-5" />
+                      <span className="font-medium">Dark Mode</span>
+                    </div>
+                    <p className="text-sm opacity-70">
+                      Reduces eye strain in low-light conditions
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </motion.div>
